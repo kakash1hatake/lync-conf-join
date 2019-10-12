@@ -545,8 +545,10 @@ get_key()
 # Returns true if argument is a file:// URL or path
 is_file_url_or_path()
 {
-    if echo "$1" | grep -q '^file://' \
-            || ! echo "$1" | egrep -q '^[[:alpha:]+\.\-]+:'; then
+  local re_file='^file://'
+  local re_url_scheme='^[a-z0-9\.-]+:'
+
+    if [[ "$1" =~ $re_file ]] || ! [[ "$1" =~ $re_url_scheme ]]; then
         return 0
     else
         return 1
@@ -673,6 +675,13 @@ open_mate()
 
 open_xfce()
 {
+  local re='^lync15:confjoin'
+  
+  if [[ "$1" =~ $re ]]; then
+    # need this check as then scheme part must be only letters, dot or dash and folks from Microsoft don't follow the rules as usual
+    # and exo-open fails to find the application for url scheme
+    open_generic "$1"
+  else
     if exo-open --help 2>/dev/null 1>&2; then
         exo-open "$1"
     elif gio help open 2>/dev/null 1>&2; then
@@ -682,6 +691,7 @@ open_xfce()
     else
         open_generic "$1"
     fi
+  fi
 
     if [ $? -eq 0 ]; then
         exit_success
@@ -861,11 +871,12 @@ open_generic()
 {
     if is_file_url_or_path "$1"; then
         local file="$(file_url_to_path "$1")"
-
+        echo "file: $file"
         check_input_file "$file"
 
         if has_display; then
             filetype=`xdg-mime query filetype "$file" | sed "s/;.*//"`
+	    echo "filetype :$filetype"
             open_generic_xdg_mime "$file" "$filetype"
         fi
 
