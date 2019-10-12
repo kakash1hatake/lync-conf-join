@@ -5,7 +5,7 @@ Join Microsoft Lync Conference via invite link on Linux.
 
 Install steps:
 1. First of all you need to setup and configure Pidgin with Sipe plugin. I assume that you have done it already.
-2. Copy contents of the *handler* folder somewhere on yor path, e.g. into $HOME/bin/Lync/ and make *lync* executable
+2. Copy contents of the *handler* folder somewhere on your path, e.g. into $HOME/bin/Lync/ and make *lync* executable
 ```
 chmod +x $HOME/bin/Lync/lync
 ```
