@@ -1,5 +1,7 @@
 # Steps for Google Chrome
 
+[Русский](./readme.ru.md) | [English](./readme.md)
+
 1. When running *regiser_mime.sh* you need to choose *lync15* or *lync* protocol(in my case it was lync15).
 2. Copy *xdg-open* somewhere on your path, e.g. into *$HOME/bin* and make it executable
 ```
@@ -17,4 +19,4 @@ As I use Xfce desktop environment I've only pathed then *open_xfce* function. Yo
 If you use another disto and\or another DE then you need to patch this file in similar way (if links are not executed properly via xdg-open).
 
 # Contribution
-Feel free to open pull requests if you want to add fixes for others linux distros or DE.
+If you want to add you patches for other distros or DE in then mainstream branch of the project feel free to open issues\pull-requests.
