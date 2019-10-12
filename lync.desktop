@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Lync Conference
+Comment=dbus proxy for Pidgin Sipe
+Exec=$HOME/bin/Lync/lync %u
+Icon=lync.png
+Type=Application
+Terminal=false
+Categories=Network;InstantMessaging;
+#this is needed to handle conference join links
+MimeType=x-scheme-handler/lync15;x-scheme-handler/conf;x-scheme-handler/lync;

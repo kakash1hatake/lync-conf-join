@@ -1,0 +1,59 @@
+#!/usr/bin/perl -w
+#
+# simple handler to pass conference invitation links to Pidgin Sipe from browser
+#
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib $FindBin::Bin;
+use SipeHelper;
+use URI::Escape;
+
+# Check command line parameters
+die "usage: $0 <conference URI> \n" unless @ARGV;
+
+my $inurl="";
+my $confurl="";
+my $len=scalar(@ARGV);
+
+if ($len > 0) {
+  $inurl=$ARGV[0];
+}
+
+open(FH, '>', '/tmp/lync.log');
+
+print FH "arg called: $inurl\n";
+
+if ($inurl =~ /^lync[0-9]*:confjoin\?url=(.+)$/) {
+  # handle lync:confjoin?url=...
+  $confurl=uri_unescape($1);
+  print FH "extracted confurl: $confurl\n";
+}
+elsif ($inurl =~ /^lync[0-9]*:\/\/confjoin\?url=(.+)$/) {
+  # handle lync://confjoin?url=...
+  $confurl=uri_unescape($1);
+  print FH "extracted confurl: $confurl\n";
+}
+elsif ($inurl =~ /^conf:sip:/) {
+  # handle conf:sip:<username> ...
+  $confurl=uri_unescape($inurl);
+  print FH "confurl: $confurl\n";
+}
+else {
+  print FH "url not supported. exit\n";
+  close(FH);
+  exit 0;
+}
+
+SipeHelper::init();
+SipeHelper::forSipeAccounts(sub {
+  my($purple, $accountId, $username) = @_;
+  print FH "Trying to join conference '${confurl}' on SIPE account '${username}'...\n";
+  $purple->SipeJoinConferenceWithUri($accountId, $confurl);
+});
+
+close(FH);
+exit 0;
+
